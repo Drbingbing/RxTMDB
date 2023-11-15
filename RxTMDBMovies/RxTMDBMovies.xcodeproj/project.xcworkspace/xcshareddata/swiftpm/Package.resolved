@@ -1,6 +1,33 @@
 {
   "pins" : [
     {
+      "identity" : "basetoolbox",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/lkzhao/BaseToolbox.git",
+      "state" : {
+        "revision" : "b3116a0a9d5c18c2f048b49d3259aef460540d94",
+        "version" : "0.6.0"
+      }
+    },
+    {
+      "identity" : "kingfisher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/onevcat/Kingfisher.git",
+      "state" : {
+        "revision" : "277f1ab2c6664b19b4a412e32b094b201e2d5757",
+        "version" : "7.10.0"
+      }
+    },
+    {
+      "identity" : "rxdatasources",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/RxSwiftCommunity/RxDataSources.git",
+      "state" : {
+        "revision" : "90c29b48b628479097fe775ed1966d75ac374518",
+        "version" : "5.0.2"
+      }
+    },
+    {
       "identity" : "rxswift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ReactiveX/RxSwift.git",

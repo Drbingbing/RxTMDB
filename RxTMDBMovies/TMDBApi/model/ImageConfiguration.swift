@@ -19,6 +19,6 @@ public struct ImagesConfiguration: Decodable {
     
     private enum CodingKeys: String, CodingKey {
         case baseURL = "base_url"
-        case posterSizes = "backdrop_sizes"
+        case posterSizes = "poster_sizes"
     }
 }

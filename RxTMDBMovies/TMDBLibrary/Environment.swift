@@ -13,13 +13,13 @@ public struct Environment {
     /// A type that exposes endpoint for fetching TMDB movies.
     public let apiService: TMDBServiceProtocol
     
-    public let imagesConfiguration: ImagesConfiguration
+    public let posterBaseURL: String
     
     init(
         apiService: TMDBServiceProtocol = TMDBService(),
-        imagesConfiguration: ImagesConfiguration
+        posterBaseURL: String = "http://image.tmdb.org/t/p/w185"
     ) {
         self.apiService = apiService
-        self.imagesConfiguration = imagesConfiguration
+        self.posterBaseURL = posterBaseURL
     }
 }

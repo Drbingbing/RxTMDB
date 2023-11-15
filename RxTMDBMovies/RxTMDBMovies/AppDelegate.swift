@@ -27,7 +27,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             .configuration()
             .asObservable()
             .subscribe { result in
-                print(result)
+                if case let .success(config) = result {
+                    let posterSize = config.posterSizes.filter { $0 != "original" }.mid ?? "w185"
+                    AppEnvironment.replaceCurrentEnvironment(posterBaseURL: config.baseURL + posterSize)
+                }
+                print(AppEnvironment.current.posterBaseURL)
             }
             .disposed(by: disposeBag)
         

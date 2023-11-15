@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>Bearer Token</key>
+	<string>eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhYjA2YTk1NjNmYWU3NDMwOTc2ZWYxYzg3NjQ3OTMxMyIsInN1YiI6IjYyYmFjYjI4MTJhYWJjMDYxYjYyNjg4ZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.vLIgZtntgNbfv79SmwSG1tLmS4vrk7lvbqMLsKVvF_U</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

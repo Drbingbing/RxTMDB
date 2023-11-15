@@ -8,6 +8,7 @@
 import Foundation
 import RxSwift
 import RxCocoa
+import TMDBApi
 
 public typealias RootViewControllerIndex = Int
 
@@ -41,6 +42,7 @@ public protocol RootViewModelInputs {
 public protocol RootViewModelOutputs {
     var viewControllers: Observable<[RootViewControllerData]> { get }
     var tabBarItemsData: Observable<TabBarItemsData> { get }
+    var imagesConfiguration: Observable<ImagesConfiguration> { get }
 }
 
 public protocol RootViewModelProtocol {
@@ -54,10 +56,18 @@ public final class RootViewModel: RootViewModelProtocol, RootViewModelInputs, Ro
         viewControllers = viewDidLoadSubject.map { _ in generateStandardViewControllers() }
         
         tabBarItemsData = viewDidLoadSubject.map { _ in tabData() }
+        
+        imagesConfiguration = viewDidLoadSubject
+            .flatMap {
+                AppEnvironment.current.apiService.configuration()
+            }
+            .map { try $0.get() }
+            .asObservable()
     }
     
     public let viewControllers: Observable<[RootViewControllerData]>
     public let tabBarItemsData: Observable<TabBarItemsData>
+    public var imagesConfiguration: Observable<ImagesConfiguration>
     
     public var inputs: RootViewModelInputs { return self }
     public var outputs: RootViewModelOutputs { return self }

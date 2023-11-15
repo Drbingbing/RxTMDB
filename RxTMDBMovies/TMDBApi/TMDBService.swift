@@ -31,4 +31,9 @@ public struct TMDBService: TMDBServiceProtocol {
             $0.map(\.result)
         }
     }
+    
+    public func upcomingMovies(_ inputs: UpcomingMovieInputs) -> Signal<Result<MoviesResult, ErrorEnvelope>> {
+        let params = inputs.dictionaryRepresentation ?? [:]
+        return request(.upcoming(params))
+    }
 }

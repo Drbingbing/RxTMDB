@@ -7,10 +7,14 @@
 
 import Foundation
 
-public struct AccessTokenEnvelope {
+public struct AccessTokenEnvelope: Decodable {
     public var token: String
     
     public init(token: String) {
         self.token = token
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        case token = "Bearer Token"
     }
 }

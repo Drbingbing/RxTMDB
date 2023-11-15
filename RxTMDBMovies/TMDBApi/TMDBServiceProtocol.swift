@@ -16,7 +16,11 @@ public protocol TMDBServiceProtocol {
     
     func login(_ oauthToken: OauthTokenAuthProtocol) -> Self
     
+    /// Images congigurations
     func configuration() -> Signal<Result<ImagesConfiguration, ErrorEnvelope>>
+    
+    /// Get a list of movies that are being released soon.
+    func upcomingMovies(_ inputs: UpcomingMovieInputs) -> Signal<Result<MoviesResult, ErrorEnvelope>>
 }
 
 extension TMDBServiceProtocol {
@@ -59,16 +63,12 @@ extension TMDBServiceProtocol {
             headers["Content-Type"] = "application/json; charset=utf-8"
             request.httpBody = try? JSONSerialization.data(withJSONObject: query, options: [])
           }
-        } else {
-          queryItems.append(
-            contentsOf: query
-              .flatMap(queryComponents)
-              .map(URLQueryItem.init(name:value:))
-          )
         }
         
         components.queryItems = queryItems.sorted { $0.name < $1.name }
+        
         request.url = components.url
+        request.httpBody = query.percentEscaped().data(using: .utf8)
         
         let currentHeaders = request.allHTTPHeaderFields ?? [:]
         request.allHTTPHeaderFields = currentHeaders.withAllValuesFrom(headers)
@@ -96,23 +96,5 @@ extension TMDBServiceProtocol {
         var query: [String: String] = [:]
         query["language"] = "en-US"
         return query
-    }
-    
-    fileprivate func queryComponents(_ key: String, _ value: Any) -> [(String, String)] {
-        var components: [(String, String)] = []
-        
-        if let dictionary = value as? [String: Any] {
-            for (nestedKey, value) in dictionary {
-                components += queryComponents("\(key)[\(nestedKey)]", value)
-            }
-        } else if let array = value as? [Any] {
-            for value in array {
-                components += queryComponents("\(key)[]", value)
-            }
-        } else {
-            components.append((key, String(describing: value)))
-        }
-        
-        return components
     }
 }

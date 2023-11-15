@@ -41,6 +41,12 @@ final class RootTabBarViewController: UITabBarController {
                 self?.setTabBarItemStyles($0)
             }
             .disposed(by: disposeBag)
+        
+        viewModel.outputs.imagesConfiguration
+            .subscribe {
+                AppEnvironment.replaceCurrentEnvironment(posterBaseURL: $0.baseURL)
+            }
+            .disposed(by: disposeBag)
     }
     
     private func setTabBarItemStyles(_ data: TabBarItemsData) {

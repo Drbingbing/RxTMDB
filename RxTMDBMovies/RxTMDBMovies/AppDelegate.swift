@@ -10,8 +10,6 @@ import TMDBLibrary
 import TMDBApi
 import RxSwift
 
-private let BearerToken = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhYjA2YTk1NjNmYWU3NDMwOTc2ZWYxYzg3NjQ3OTMxMyIsInN1YiI6IjYyYmFjYjI4MTJhYWJjMDYxYjYyNjg4ZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.vLIgZtntgNbfv79SmwSG1tLmS4vrk7lvbqMLsKVvF_U"
-
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
@@ -21,19 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         UIViewController.doBadSwizzleStuff()
         
-        /// eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhYjA2YTk1NjNmYWU3NDMwOTc2ZWYxYzg3NjQ3OTMxMyIsInN1YiI6IjYyYmFjYjI4MTJhYWJjMDYxYjYyNjg4ZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.vLIgZtntgNbfv79SmwSG1tLmS4vrk7lvbqMLsKVvF_U
-        AppEnvironment.login(AccessTokenEnvelope(token: BearerToken))
-        AppEnvironment.current.apiService
-            .configuration()
-            .asObservable()
-            .subscribe { result in
-                if case let .success(config) = result {
-                    let posterSize = config.posterSizes.filter { $0 != "original" }.mid ?? "w185"
-                    AppEnvironment.replaceCurrentEnvironment(posterBaseURL: config.baseURL + posterSize)
-                }
-                print(AppEnvironment.current.posterBaseURL)
-            }
-            .disposed(by: disposeBag)
+        let accessTokenEnvelope: AccessTokenEnvelope = PropertyListHelper.decode()
+        AppEnvironment.login(AccessTokenEnvelope(token: accessTokenEnvelope.token))
         
         return true
     }

@@ -65,6 +65,7 @@
 		30C9D2CB2B04B9F00097213C /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 30C9D2CA2B04B9F00097213C /* RxCocoa */; };
 		30C9D2CD2B04BA040097213C /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 30C9D2CC2B04BA040097213C /* RxSwift */; };
 		30C9D2CF2B04BE830097213C /* ConfigurationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30C9D2CE2B04BE830097213C /* ConfigurationResult.swift */; };
+		30C9D2D12B04C4350097213C /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30C9D2D02B04C4350097213C /* Array+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -206,6 +207,7 @@
 		30C9D2C62B04B4130097213C /* Service+DecodeHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Service+DecodeHelpers.swift"; sourceTree = "<group>"; };
 		30C9D2C82B04B7AA0097213C /* ImageConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageConfiguration.swift; sourceTree = "<group>"; };
 		30C9D2CE2B04BE830097213C /* ConfigurationResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationResult.swift; sourceTree = "<group>"; };
+		30C9D2D02B04C4350097213C /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -383,6 +385,7 @@
 			children = (
 				30C9D24A2B0317450097213C /* UIViewController+Preparation.swift */,
 				30C9D2512B03498E0097213C /* Optional+Extension.swift */,
+				30C9D2D02B04C4350097213C /* Array+Extension.swift */,
 			);
 			path = DataSource;
 			sourceTree = "<group>";
@@ -831,6 +834,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				30C9D24B2B0317450097213C /* UIViewController+Preparation.swift in Sources */,
+				30C9D2D12B04C4350097213C /* Array+Extension.swift in Sources */,
 				30C9D2AB2B0460F70097213C /* Environment.swift in Sources */,
 				30C9D2962B0366BD0097213C /* Colors.swift in Sources */,
 				30C9D2522B03498E0097213C /* Optional+Extension.swift in Sources */,

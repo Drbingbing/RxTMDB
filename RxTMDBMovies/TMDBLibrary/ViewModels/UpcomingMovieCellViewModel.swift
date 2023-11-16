@@ -34,6 +34,8 @@ public final class UpcomingMovieCellViewModel: UpcomingMovieCellViewModelProtoco
     
     public init() {
         posterPath = moviewSubject.map(\.posterPath)
+            .compactMap { $0 }
+            .map { AppEnvironment.current.posterBaseURL + $0 }
             .map { URL(string: $0) }
         title = moviewSubject.map(\.title)
         releaseDate = moviewSubject.map(\.releaseDate)

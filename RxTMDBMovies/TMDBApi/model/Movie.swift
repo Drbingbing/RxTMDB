@@ -9,14 +9,16 @@ import Foundation
 
 public struct Movie: Hashable, Decodable {
     
-    public let id: Int
+    private let id = UUID()
+    
+    public let movieID: Int
     public let overview: String
     public let title: String
-    public let posterPath: String
+    public let posterPath: String?
     public let releaseDate: String
     
-    public init(id: Int, overview: String, title: String, posterPath: String, releaseDate: String) {
-        self.id = id
+    public init(movieID: Int, overview: String, title: String, posterPath: String, releaseDate: String) {
+        self.movieID = movieID
         self.overview = overview
         self.title = title
         self.posterPath = posterPath
@@ -24,7 +26,8 @@ public struct Movie: Hashable, Decodable {
     }
     
     private enum CodingKeys: String, CodingKey {
-        case id, overview, title
+        case movieID = "id"
+        case overview, title
         case posterPath = "poster_path"
         case releaseDate = "release_date"
     }

@@ -41,12 +41,6 @@ final class RootTabBarViewController: UITabBarController {
                 self?.setTabBarItemStyles($0)
             }
             .disposed(by: disposeBag)
-        
-        viewModel.outputs.imagesConfiguration
-            .subscribe {
-                AppEnvironment.replaceCurrentEnvironment(posterBaseURL: $0.baseURL)
-            }
-            .disposed(by: disposeBag)
     }
     
     private func setTabBarItemStyles(_ data: TabBarItemsData) {
@@ -56,10 +50,10 @@ final class RootTabBarViewController: UITabBarController {
                 tabBarItem(at: rootViewControllerIndex).ifLet(upcomingTabBarItemStyle)
             case .tv(let rootViewControllerIndex):
                 tabBarItem(at: rootViewControllerIndex).ifLet(tvTabBarItemStyle)
-            case .people(let rootViewControllerIndex):
-                tabBarItem(at: rootViewControllerIndex).ifLet(peopleTabBarItemStyle)
-            case .profile(let rootViewControllerIndex):
-                tabBarItem(at: rootViewControllerIndex).ifLet(profileTabBarItemStyle)
+            case .actors(let rootViewControllerIndex):
+                tabBarItem(at: rootViewControllerIndex).ifLet(actorsTabBarItemStyle)
+            case .favorites(let rootViewControllerIndex):
+                tabBarItem(at: rootViewControllerIndex).ifLet(favoritesTabBarItemStyle)
             }
         }
     }
@@ -85,9 +79,9 @@ extension RootTabBarViewController {
             return UpcomingMoviesViewController()
         case .tv:
             return UIViewController()
-        case .people:
+        case .actors:
             return UIViewController()
-        case .profile:
+        case .favorites:
             return UIViewController()
         }
     }
@@ -104,12 +98,12 @@ private func tvTabBarItemStyle(_ tabBarItem: UITabBarItem) {
     tabBarItem.image = UIImage(systemName: "tv")
 }
 
-private func peopleTabBarItemStyle(_ tabBarItem: UITabBarItem) {
-    tabBarItem.title = "People"
-    tabBarItem.image = UIImage(systemName: "star")
+private func actorsTabBarItemStyle(_ tabBarItem: UITabBarItem) {
+    tabBarItem.title = "Actors"
+    tabBarItem.image = UIImage(systemName: "person.fill.viewfinder")
 }
 
-private func profileTabBarItemStyle(_ tabBarItem: UITabBarItem) {
-    tabBarItem.title = "Profile"
-    tabBarItem.image = UIImage(systemName: "person.fill.viewfinder")
+private func favoritesTabBarItemStyle(_ tabBarItem: UITabBarItem) {
+    tabBarItem.title = "Favorites"
+    tabBarItem.image = UIImage(systemName: "star")
 }

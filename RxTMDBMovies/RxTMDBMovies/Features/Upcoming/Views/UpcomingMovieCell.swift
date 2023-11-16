@@ -56,8 +56,8 @@ final class UpcomingMovieCell: UICollectionViewCell {
         
         primaryLabel.translatesAutoresizingMaskIntoConstraints = false
         primaryLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4).isActive = true
-        primaryLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
-        primaryLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
+        primaryLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: 8).isActive = true
+        primaryLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: -8).isActive = true
         
         secondaryLabel.translatesAutoresizingMaskIntoConstraints = false
         secondaryLabel.topAnchor.constraint(equalTo: primaryLabel.bottomAnchor, constant: 4).isActive = true

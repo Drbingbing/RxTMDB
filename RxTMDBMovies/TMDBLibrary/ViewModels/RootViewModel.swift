@@ -15,15 +15,15 @@ public typealias RootViewControllerIndex = Int
 public enum RootViewControllerData {
     case upcoming
     case tv
-    case people
-    case profile
+    case actors
+    case favorites
 }
 
 public enum TabBarItem {
     case upcoming(RootViewControllerIndex)
     case tv(RootViewControllerIndex)
-    case people(RootViewControllerIndex)
-    case profile(RootViewControllerIndex)
+    case actors(RootViewControllerIndex)
+    case favorites(RootViewControllerIndex)
 }
 
 public struct TabBarItemsData {
@@ -80,15 +80,15 @@ public final class RootViewModel: RootViewModelProtocol, RootViewModelInputs, Ro
 
 
 private func generateStandardViewControllers() -> [RootViewControllerData] {
-    return [.upcoming, .tv, .people, .profile]
+    return [.upcoming, .tv, .actors, .favorites]
 }
 
 private func tabData() -> TabBarItemsData {
     let items: [TabBarItem] = [
         .upcoming(0),
         .tv(1),
-        .people(2),
-        .profile(3)
+        .actors(2),
+        .favorites(3)
     ]
     
     return TabBarItemsData(items: items)

@@ -61,14 +61,19 @@ extension TMDBServiceProtocol {
         if method == .some("POST") || method == .some("PUT") {
           if request.httpBody == nil {
             headers["Content-Type"] = "application/json; charset=utf-8"
-            request.httpBody = try? JSONSerialization.data(withJSONObject: query, options: [])
+            request.httpBody = query.percentEscaped().data(using: .utf8)
           }
+        } else {
+            queryItems.append(
+                contentsOf: query.map {
+                    URLQueryItem(name: "\($0)", value: "\($1)")
+                }
+            )
         }
         
-        components.queryItems = queryItems.sorted { $0.name < $1.name }
+        components.queryItems = queryItems
         
         request.url = components.url
-        request.httpBody = query.percentEscaped().data(using: .utf8)
         
         let currentHeaders = request.allHTTPHeaderFields ?? [:]
         request.allHTTPHeaderFields = currentHeaders.withAllValuesFrom(headers)

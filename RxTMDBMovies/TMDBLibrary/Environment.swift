@@ -17,7 +17,7 @@ public struct Environment {
     
     init(
         apiService: TMDBServiceProtocol = TMDBService(),
-        posterBaseURL: String = "http://image.tmdb.org/t/p/w185"
+        posterBaseURL: String = "https://image.tmdb.org/t/p/w185"
     ) {
         self.apiService = apiService
         self.posterBaseURL = posterBaseURL

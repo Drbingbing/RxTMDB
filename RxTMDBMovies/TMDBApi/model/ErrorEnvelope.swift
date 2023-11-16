@@ -12,6 +12,12 @@ public struct ErrorEnvelope {
     public let tmdbCode: TMDBCode?
     public let httpCode: Int
     
+    public init(errorMessages: [String] = [], tmdbCode: TMDBCode? = .APIError, httpCode: Int = 400) {
+        self.errorMessages = errorMessages
+        self.tmdbCode = tmdbCode
+        self.httpCode = httpCode
+    }
+    
     public enum TMDBCode: String {
         case JSONParsingFailed = "json_parsing_failed"
         case ErrorEnvelopeJSONParsingFailed = "error_json_parsing_failed"

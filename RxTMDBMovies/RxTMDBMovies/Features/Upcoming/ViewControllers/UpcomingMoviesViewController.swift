@@ -48,7 +48,8 @@ final class UpcomingMoviesViewController: UIViewController {
     
     override func bindingViewModel() {
         viewModel.outputs.movies
-            .subscribe { [weak self] in
+            .distinctUntilChanged()
+            .drive { [weak self] in
                 guard let self else { return }
                 var snapshot = NSDiffableDataSourceSnapshot<Section, Movie>()
                 snapshot.appendSections([.main])
@@ -69,7 +70,7 @@ final class UpcomingMoviesViewController: UIViewController {
             heightDimension: .fractionalHeight(1.0)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
+        item.contentInsets = .init(top: 0, leading: 0, bottom: 8, trailing: 0)
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
             heightDimension: .estimated(300)
@@ -78,6 +79,7 @@ final class UpcomingMoviesViewController: UIViewController {
             layoutSize: groupSize, 
             subitems: [item]
         )
+        
         group.interItemSpacing = .flexible(8)
 
         let section = NSCollectionLayoutSection(group: group)
@@ -107,5 +109,9 @@ extension UpcomingMoviesViewController: UICollectionViewDelegate {
                 cell.transform = .identity
             }
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        viewModel.inputs.willDisplayRow(indexPath.item, outOf: collectionView.numberOfItems(inSection: indexPath.section))
     }
 }

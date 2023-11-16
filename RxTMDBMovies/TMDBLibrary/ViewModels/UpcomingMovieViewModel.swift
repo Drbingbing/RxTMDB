@@ -11,24 +11,29 @@ import RxSwift
 import RxCocoa
 import RxFeedback
 
+struct UpcomingMoviesQuery: Equatable {
+    var shouldLoadNextPage: Bool
+    var page: Int
+}
+
 struct UpcomingMoviesState {
     
-    var movies: [Movie]
-    var input: UpcomingMovieInputs
-    
-    init(input: UpcomingMovieInputs) {
-        self.input = input
-        self.movies = []
-    }
+    var movies: [Movie] = []
+    var shouldLoadNextPage: Bool = true
+    var nextPage: Int = 1
     
     static func reduce(state: UpcomingMoviesState, command: UpcomingMovieFetchCommand) -> UpcomingMoviesState {
         switch command {
         case .loadMore:
+            var state = state
+            state.shouldLoadNextPage = true
             return state
         case .responsed(let moviesResult):
-            var newState = state
-            newState.movies.append(contentsOf: moviesResult.results)
-            return newState
+            var state = state
+            state.movies.append(contentsOf: moviesResult.results)
+            state.shouldLoadNextPage = false
+            state.nextPage = moviesResult.page + 1
+            return state
         }
     }
 }
@@ -40,23 +45,48 @@ enum UpcomingMovieFetchCommand {
 
 public protocol UpcomingMovieViewModelInputs {
     func viewDidLoad()
+    
+    /// Call from the controller's `collectionview:willDisplayCell:forItemAt` method.
+    ///
+    /// - parameter item:       The 0-based index of the item displaying.
+    /// - parameter totalItems: The total number of items in the collection view.
+    func willDisplayRow(_ item: Int, outOf totalItems: Int)
 }
 
 public protocol UpcomingMovieViewModelOutputs {
-    var movies: Observable<[Movie]> { get }
+    var movies: Driver<[Movie]> { get }
+    
 }
 
 public protocol UpcomingMovieViewModelProtocol {
     var inputs: UpcomingMovieViewModelInputs { get }
     var outputs: UpcomingMovieViewModelOutputs { get }
+    
 }
 
 public final class UpcomingMovieViewModel: UpcomingMovieViewModelProtocol, UpcomingMovieViewModelInputs, UpcomingMovieViewModelOutputs {
     
     public init() {
-        movies = viewDidLoadSubject.map { _ in
-            fetchUpcomingMovies(input: <#T##Signal<UpcomingMovieInputs>#>, loadNextPageTrigger: <#T##(Driver<UpcomingMoviesState>) -> Signal<()>#>, performSearch: <#T##(UpcomingMovieInputs) -> Signal<Result<MoviesResult, ErrorEnvelope>>#>)
+        let loadNextPageTrigger = willDisplayItemSubject
+          .map { item, total in total > 19 && item >= total - 2 }
+          .distinctUntilChanged()
+          .filter { $0 }
+          .flatMap { _ in Signal<Void>.just(()) }
+          .asSignal(onErrorJustReturn: ())
+        
+        movies = viewDidLoadSubject.flatMap { _ in
+            fetchUpcomingMovies(
+                loadNextPageTrigger: { state in
+                    loadNextPageTrigger
+                },
+                performSearch: { query in
+                    let input = UpcomingMovieInputs(page: query.page)
+                    return AppEnvironment.current.apiService.upcomingMovies(input)
+                }
+            )
         }
+        .map(\.movies)
+        .asDriver(onErrorJustReturn: [])
     }
     
     public var inputs: UpcomingMovieViewModelInputs { return self }
@@ -64,7 +94,7 @@ public final class UpcomingMovieViewModel: UpcomingMovieViewModelProtocol, Upcom
     
     // MARK: - Outputs
     
-    public let movies: Observable<[Movie]>
+    public let movies: Driver<[Movie]>
     
     
     // MARK: - Inputs
@@ -73,21 +103,32 @@ public final class UpcomingMovieViewModel: UpcomingMovieViewModelProtocol, Upcom
         viewDidLoadSubject.onNext(())
     }
     
-    
+    private let willDisplayItemSubject = PublishSubject<(item: Int, total: Int)>()
+    public func willDisplayRow(_ item: Int, outOf totalItems: Int) {
+        willDisplayItemSubject.onNext((item, totalItems))
+    }
 }
 
 private func fetchUpcomingMovies(
-    input: Signal<UpcomingMovieInputs>,
     loadNextPageTrigger: @escaping (Driver<UpcomingMoviesState>) -> Signal<()>,
-    performSearch: @escaping (UpcomingMovieInputs) -> Signal<Result<MoviesResult, ErrorEnvelope>>
+    performSearch: @escaping (UpcomingMoviesQuery) -> Signal<Result<MoviesResult, ErrorEnvelope>>
 ) -> Driver<UpcomingMoviesState> {
     let fetchPerformerFeedback: (Driver<UpcomingMoviesState>) -> Signal<UpcomingMovieFetchCommand> = react(
         request: { state in
-            UpcomingMovieInputs(page: state.input.page)
+            UpcomingMoviesQuery(shouldLoadNextPage: state.shouldLoadNextPage, page: state.nextPage)
         },
         effects: { request -> Signal<UpcomingMovieFetchCommand> in
+            if !request.shouldLoadNextPage {
+                return Signal.empty()
+            }
             return performSearch(request)
-                .compactMap { try? $0.get() }
+                .flatMap { result in
+                    do {
+                        return .just(try result.get())
+                    } catch {
+                        return .just(.init(results: [], page: request.page))
+                    }
+                }
                 .map(UpcomingMovieFetchCommand.responsed)
         }
     )
@@ -99,7 +140,7 @@ private func fetchUpcomingMovies(
     }
     
     return Driver.system(
-        initialState: UpcomingMoviesState(input: UpcomingMovieInputs(page: 1)),
+        initialState: UpcomingMoviesState(),
         reduce: UpcomingMoviesState.reduce,
         feedback: fetchPerformerFeedback, inputFeedbackLoop
     )
